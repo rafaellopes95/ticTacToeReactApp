@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+  // this.props.value will show the value contained in the props passed by parent component (Board).
   render() {
     return (
       <button className="square">
-        {/* TODO */}
+        {this.props.value}
       </button>
     );
   }
@@ -14,7 +15,8 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <Square />;
+    // Passing props to child component (Square).
+    return <Square value={i}/>;
   }
 
   render() {
