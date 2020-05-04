@@ -6,7 +6,7 @@ class Square extends React.Component {
   // this.props.value will show the value contained in the props passed by parent component (Board).
   render() {
     return (
-      <button className="square">
+      <button className="square" onClick={() => alert('click')}>
         {this.props.value}
       </button>
     );
