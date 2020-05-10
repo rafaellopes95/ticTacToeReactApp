@@ -56,12 +56,14 @@ class Game extends React.Component {
   // Ideally the state need to be handled by the highest level component as possible, which is Game class in this case.
   // The state contains an Array with a position dedicated for each square.
   // The super constructor call is mandatory in all React components.
+  // stepNumber variable says which step of the game we are seeing in the moment.
   constructor(props) {
     super(props);
     this.state = {
       history: [{
         squares: Array(9).fill(null),
       }],
+      stepNumber: 0,
       xIsNext: true,
     };
   }
@@ -69,7 +71,8 @@ class Game extends React.Component {
   handleClick(i) {
     // Using slice to create a copy from the original array, avoiding mutability.
     // Immutability here will allow to keep the match history.
-    const history = this.state.history;
+    // The slice method will cover always the begining of the match until the last step.
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
@@ -83,15 +86,39 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     })
   }
 
+  // Method to switch the step visualization of the game history.
+  // When travelling back in history, it will be possible to change the future moves in case there is not a winner yet.
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
+    });
+  }
+
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     
+    // This will create a button to every move in history.
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Go to move #' + move :
+        'Go to game start';
+      
+      // The key prop is a special prop and reserved to React for re-rendering control, which is very important to have in case of dynamic lists.
+      return (
+        <li key={move}>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
+
     let status;
 
     if(winner) {
@@ -110,7 +137,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
