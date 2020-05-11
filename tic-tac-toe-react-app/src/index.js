@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PersonList from './component/PersonList';
 import './index.css';
 
 // Transformed Square class into a function component, which is simpler, can contain a single render method only and cannot keep state.
@@ -138,6 +139,9 @@ class Game extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <ol>{moves}</ol>
+        </div>
+        <div>
+          <PersonList/>
         </div>
       </div>
     );
